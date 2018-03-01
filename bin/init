@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASEDIR="${DIR}/../"
+
+FUNC_FILE="${BASEDIR}/bin/functions"
+source "${FUNC_FILE}"
+
+trap reload_sysvars SIGCONT 
+reload_sysvars

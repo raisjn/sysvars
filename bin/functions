@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+reload_sysvars() {
+  for file in `ls ${BASEDIR}/vars/*`; do
+    varname=`basename ${file}`
+    value=`cat ${file}`
+    export ${varname}="$value"
+  done
+
+  for file in ${BASEDIR}/hooks/*; do
+    source ${file}
+  done
+}
+
+sysvar() {
+  full_string="$*"
+
+  left_side=`echo ${full_string} | cut -d= -f1`
+  right_side=`echo ${full_string} | cut -d= -f2-`
+
+  # search for an equals sign
+  echo ${full_string} | grep "=" > /dev/null
+  has_equals="$?"
+
+  if [[ $left_side == "" ]]; then
+    echo "Usage: sysvar foo=bar"
+  elif [[ ${has_equals} != 0 ]]; then
+    cat "${BASEDIR}/vars/${left_side}"
+  elif [[ $right_side != "" ]]; then
+    echo "$right_side" > "${BASEDIR}/vars/${left_side}"
+    # this signal name to be kept in tandem with our trapped signal
+    killall -SIGCONT bash
+  else
+    echo "Usage: sysvar foo=bar"
+  fi
+}
