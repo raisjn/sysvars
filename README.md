@@ -5,7 +5,7 @@ i want my environment variables to be updated across all my shells.
 this is a set of scripts that helps automate that in bash.
 
 the idea is: "sysvar FOO=blah" will set FOO to blah. other bash terminals will
-then be sent the SIGTERM command and told to reload their env variables and run
+then be sent the SIGCONT command and told to reload their env variables and run
 any hooks in sysvars/hooks
 
 
@@ -46,8 +46,8 @@ around until they are deleted.
 sysvars add a trap signal handler to all new bash shells. when the handler is
 invoked, it reloads the variables defined in the sysvars director.
 
-at the moment, the signal is ^C (ctrl-c), so anytime a ctrl-c is pressed in one
-shell, all shells will have their sysvars synced.
+at the moment, the signal is SIGCONT, which is one of the few signals that
+are ignored by default.
 
 
 ## caveats and gotchas
